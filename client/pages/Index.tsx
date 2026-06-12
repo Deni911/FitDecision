@@ -325,41 +325,95 @@ export default function Index() {
         </div>
 
         <div className="space-y-4">
-          {recentAssessments.map((assessment) => (
-            <div
-              key={assessment.id}
-              className="flex items-center justify-between p-4 bg-background rounded-lg border border-border hover:border-accent/50 transition-colors"
-            >
-              <div className="flex-1">
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-accent"></div>
+          {recentAssessments.map((assessment) => {
+            const style = (() => {
+              const normalized = (assessment.goal || "").toLowerCase();
+              if (normalized.includes("otot") || normalized.includes("bulk")) {
+                return {
+                  icon: <Dumbbell className="text-orange-500" size={16} />,
+                  bgColor: "bg-orange-500/10",
+                  textColor: "text-orange-500",
+                  borderColor: "border-orange-500/20",
+                  label: "Membangun Otot"
+                };
+              }
+              if (normalized.includes("komposisi") || normalized.includes("recomp")) {
+                return {
+                  icon: <Activity className="text-cyan-500" size={16} />,
+                  bgColor: "bg-cyan-500/10",
+                  textColor: "text-cyan-500",
+                  borderColor: "border-cyan-500/20",
+                  label: "Komposisi Tubuh"
+                };
+              }
+              if (normalized.includes("lemak") || normalized.includes("cut")) {
+                return {
+                  icon: <Flame className="text-red-500" size={16} />,
+                  bgColor: "bg-red-500/10",
+                  textColor: "text-red-500",
+                  borderColor: "border-red-500/20",
+                  label: "Penurunan Lemak"
+                };
+              }
+              return {
+                icon: <Heart className="text-emerald-500" size={16} />,
+                bgColor: "bg-emerald-500/10",
+                textColor: "text-emerald-500",
+                borderColor: "border-emerald-500/20",
+                label: assessment.goal
+              };
+            })();
+
+            const formattedDate = (() => {
+              try {
+                return new Date(assessment.date).toLocaleDateString("id-ID", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric"
+                });
+              } catch (e) {
+                return assessment.date;
+              }
+            })();
+
+            return (
+              <div
+                key={assessment.id}
+                className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-background rounded-xl border border-border hover:border-accent/50 transition-all gap-4 shadow-sm"
+              >
+                <div className="flex items-start gap-4">
+                  <div className={`p-3 rounded-xl ${style.bgColor} border ${style.borderColor} flex items-center justify-center shrink-0`}>
+                    {style.icon}
+                  </div>
                   <div>
-                    <p className="font-medium text-foreground">
+                    <h3 className="font-semibold text-foreground text-base leading-tight">
                       {assessment.goal}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(assessment.date).toLocaleDateString("id-ID")}
+                    </h3>
+                    <p className="text-xs text-muted-foreground mt-1.5 flex items-center gap-1.5">
+                      <Clock size={12} />
+                      {formattedDate}
                     </p>
                   </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="text-right">
-                  <p className="text-sm font-semibold text-accent">
-                    {assessment.recommendation}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Skor: {assessment.score}%
-                  </p>
+
+                <div className="flex items-center justify-between sm:justify-end gap-6 border-t sm:border-t-0 pt-3 sm:pt-0 border-border/50">
+                  <div className="sm:text-right">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-accent/10 text-accent border border-accent/20">
+                      {assessment.recommendation}
+                    </span>
+                    <p className="text-xs font-medium text-muted-foreground mt-1">
+                      Skor Kelayakan: <span className="text-foreground font-semibold">{assessment.score}%</span>
+                    </p>
+                  </div>
+                  <Link to="/ranking" className="shrink-0">
+                    <Button variant="outline" size="icon" className="h-9 w-9 rounded-full">
+                      <ArrowRight size={16} />
+                    </Button>
+                  </Link>
                 </div>
-                <Link to="/ranking">
-                  <Button variant="ghost" size="sm">
-                    <ArrowRight size={16} />
-                  </Button>
-                </Link>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </Card>
 
