@@ -19,7 +19,7 @@ export default function About() {
         <p className="text-muted-foreground leading-relaxed">
           FitDecision adalah Sistem Pendukung Keputusan (SPK) yang dirancang untuk memberikan rekomendasi
           program kebugaran pribadi. Dengan menggunakan metode Simple Additive Weighting (SAW),
-          sistem kami menganalisis metrik tubuh, profil latihan, dan tujuan kebugaran Anda untuk
+          sistem kami menganalisis metrik tubuh dan profil latihan Anda untuk
           menentukan pendekatan latihan yang paling sesuai untuk kondisi unik Anda.
         </p>
       </Card>
@@ -96,23 +96,23 @@ export default function About() {
         </div>
       </Card>
 
-      {/* Six Criteria */}
+      {/* Five Criteria */}
       <Card className="bg-card border-border p-8">
         <h2 className="text-2xl font-bold text-foreground mb-6">
-          Enam Kriteria Keputusan
+          Lima Kriteria Keputusan
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[
             {
               name: "Persentase Lemak Tubuh",
-              weight: "20%",
+              weight: "25%",
               description:
                 "Menunjukkan rasio otot-ke-lemak Anda saat ini. Lemak tubuh yang lebih tinggi mungkin menunjukkan kebutuhan untuk fase penurunan lemak (cutting), sementara lemak tubuh yang lebih rendah ideal untuk fase membangun otot (bulking).",
             },
             {
               name: "IMT (Indeks Massa Tubuh)",
-              weight: "20%",
+              weight: "25%",
               description:
                 "Mengukur berat badan Anda relatif terhadap tinggi badan. Digunakan sebagai indikator umum rentang berat badan sehat dan status komposisi tubuh secara keseluruhan.",
             },
@@ -130,15 +130,9 @@ export default function About() {
             },
             {
               name: "Lingkar Pinggang",
-              weight: "15%",
+              weight: "20%",
               description:
                 "Mengukur lemak perut secara langsung. Lingkar pinggang yang tinggi menunjukkan kelebihan lemak viseral, yang merupakan prioritas untuk program penurunan lemak.",
-            },
-            {
-              name: "Tujuan Kebugaran",
-              weight: "15%",
-              description:
-                "Tujuan utama Anda (membangun otot, penurunan lemak, rekomposisi tubuh, atau kebugaran umum) sangat memengaruhi program mana yang paling cocok untuk Anda.",
             },
           ].map((criterion, idx) => (
             <div key={idx} className="p-4 bg-background rounded-lg border border-border">
@@ -241,7 +235,7 @@ export default function About() {
                 Anda Menyelesaikan Penilaian
               </h3>
               <p className="text-sm text-muted-foreground">
-                Sediakan metrik tubuh Anda, pengalaman latihan, frekuensi, dan tujuan kebugaran
+                Sediakan metrik tubuh Anda, pengalaman latihan, dan frekuensi latihan
               </p>
             </div>
           </div>
@@ -269,7 +263,7 @@ export default function About() {
                 Bobot Diterapkan
               </h3>
               <p className="text-sm text-muted-foreground">
-                Pentingnya setiap kriteria diperhitungkan (misalnya, lemak tubuh menyumbang 20% dari keputusan)
+                Pentingnya setiap kriteria diperhitungkan (misalnya, lemak tubuh menyumbang 25% dari keputusan)
               </p>
             </div>
           </div>

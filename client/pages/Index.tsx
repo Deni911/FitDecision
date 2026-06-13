@@ -2,15 +2,7 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import {
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-} from "recharts";
+
 import {
   Heart,
   Target,
@@ -112,15 +104,7 @@ export default function Index() {
   const rec = getRecommendationDetails(assessment);
   const bmi = getBMI(assessment.height, assessment.weight);
 
-  // Dynamic progress chart based on latest assessment weight
-  const progressData = [
-    { week: "Minggu 1", weight: assessment.weight + 2, bodyFat: assessment.bodyFat + 2 },
-    { week: "Minggu 2", weight: assessment.weight + 1.5, bodyFat: assessment.bodyFat + 1.5 },
-    { week: "Minggu 3", weight: assessment.weight + 1, bodyFat: assessment.bodyFat + 1.2 },
-    { week: "Minggu 4", weight: assessment.weight + 0.5, bodyFat: assessment.bodyFat + 0.8 },
-    { week: "Minggu 5", weight: assessment.weight + 0.2, bodyFat: assessment.bodyFat + 0.5 },
-    { week: "Minggu 6", weight: assessment.weight, bodyFat: assessment.bodyFat },
-  ];
+
 
   return (
     <div className="space-y-8">
@@ -277,39 +261,7 @@ export default function Index() {
         </div>
       </Card>
 
-      {/* Progress Chart */}
-      <Card className="bg-card border-border p-6">
-        <h2 className="text-xl font-semibold text-foreground mb-6">
-          Kemajuan 6 Minggu
-        </h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={progressData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-            <XAxis dataKey="week" stroke="#94a3b8" />
-            <YAxis stroke="#94a3b8" />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#1e293b",
-                border: "1px solid #475569",
-              }}
-            />
-            <Line
-              type="monotone"
-              dataKey="weight"
-              stroke="#2563eb"
-              name="Berat Badan (kg)"
-              strokeWidth={2}
-            />
-            <Line
-              type="monotone"
-              dataKey="bodyFat"
-              stroke="#22c55e"
-              name="Lemak Tubuh %"
-              strokeWidth={2}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </Card>
+
 
       {/* Recent Assessments */}
       <Card className="bg-card border-border p-6">

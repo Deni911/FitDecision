@@ -104,7 +104,7 @@ export default function RankingResults() {
           Analisis Rekomendasi
         </h3>
         <p className="text-muted-foreground leading-relaxed">
-          Berdasarkan hasil perhitungan metode SAW menggunakan kriteria <strong>Persentase Lemak Tubuh</strong>, <strong>IMT (Indeks Massa Tubuh)</strong>, <strong>Pengalaman Latihan</strong>, <strong>Frekuensi Latihan</strong>, <strong>Lingkar Pinggang</strong>, dan <strong>Tujuan Kebugaran</strong>, sistem merekomendasikan <strong className="text-accent">{rec.programName}</strong> sebagai program yang paling sesuai dengan kondisi pengguna.
+          Berdasarkan hasil perhitungan metode SAW menggunakan kriteria <strong>Persentase Lemak Tubuh</strong>, <strong>IMT (Indeks Massa Tubuh)</strong>, <strong>Pengalaman Latihan</strong>, <strong>Frekuensi Latihan</strong>, dan <strong>Lingkar Pinggang</strong>, sistem merekomendasikan <strong className="text-accent">{rec.programName}</strong> sebagai program yang paling sesuai dengan kondisi pengguna.
         </p>
       </Card>
 
@@ -261,9 +261,7 @@ export default function RankingResults() {
           <div>
             <p className="text-sm text-muted-foreground">Tujuan Kebugaran</p>
             <p className="text-lg font-semibold text-foreground">
-              {assessment.fitnessGoal === "bulk" ? "Bulking (Membangun Otot)" :
-               assessment.fitnessGoal === "recomp" ? "Rekomposisi Tubuh" :
-               assessment.fitnessGoal === "moderate_cut" ? "Cutting Moderat" : "Cutting Agresif"}
+              {topProgram ? topProgram.alternative : "Rekomposisi Tubuh"}
             </p>
           </div>
         </div>

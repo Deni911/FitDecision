@@ -9,7 +9,7 @@ export interface Assessment {
   waistCircumference: number; // cm
   trainingExperience: "beginner" | "intermediate" | "advanced";
   trainingFrequency: "1-2" | "3-4" | "5-6" | "daily";
-  fitnessGoal: "bulk" | "recomp" | "moderate_cut" | "aggressive_cut";
+  fitnessGoal?: "bulk" | "recomp" | "moderate_cut" | "aggressive_cut";
   date: string;
   sawScores: SAWResult[];
 }
@@ -22,12 +22,11 @@ export interface SAWResult {
 
 // Criteria weights (total = 1)
 const WEIGHTS = {
-  bodyFat: 0.2,
-  bmi: 0.2,
+  bodyFat: 0.25,
+  bmi: 0.25,
   trainingExperience: 0.15,
   trainingFrequency: 0.15,
-  waistCircumference: 0.15,
-  fitnessGoal: 0.15,
+  waistCircumference: 0.20,
 };
 
 // Score templates for each program type and criteria
@@ -209,8 +208,6 @@ export function calculateSAW(assessment: Assessment): SAWResult[] {
     totalScore +=
       (criteria.waistCircumference(assessment) / 100) *
       WEIGHTS.waistCircumference;
-    totalScore +=
-      (criteria.fitnessGoal(assessment) / 100) * WEIGHTS.fitnessGoal;
 
     // Convert to 0-100 scale
     const finalScore = totalScore * 100;

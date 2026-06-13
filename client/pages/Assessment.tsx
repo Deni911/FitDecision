@@ -31,12 +31,6 @@ export default function AssessmentPage() {
     waistCircumference: "",
     trainingExperience: "" as "beginner" | "intermediate" | "advanced" | "",
     trainingFrequency: "" as "1-2" | "3-4" | "5-6" | "daily" | "",
-    fitnessGoal: "" as
-      | "bulk"
-      | "recomp"
-      | "moderate_cut"
-      | "aggressive_cut"
-      | "",
   });
 
   const validateForm = (): boolean => {
@@ -59,8 +53,7 @@ export default function AssessmentPage() {
       newErrors.trainingExperience = "Pengalaman latihan wajib diisi";
     if (!formData.trainingFrequency)
       newErrors.trainingFrequency = "Frekuensi latihan wajib diisi";
-    if (!formData.fitnessGoal)
-      newErrors.fitnessGoal = "Tujuan kebugaran wajib diisi";
+
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -70,7 +63,7 @@ export default function AssessmentPage() {
     e.preventDefault();
     if (!validateForm()) return;
 
-    const assessment: Assessment = {
+    const tempAssessment = {
       id: Date.now().toString(),
       fullName: formData.fullName,
       gender: formData.gender as "male" | "female",
@@ -88,17 +81,23 @@ export default function AssessmentPage() {
         | "3-4"
         | "5-6"
         | "daily",
-      fitnessGoal: formData.fitnessGoal as
-        | "bulk"
-        | "recomp"
-        | "moderate_cut"
-        | "aggressive_cut",
       date: new Date().toISOString(),
-      sawScores: [],
     };
 
     // Calculate SAW scores
-    assessment.sawScores = calculateSAW(assessment);
+    const sawScores = calculateSAW(tempAssessment as any);
+    const topAlt = sawScores[0]?.alternative;
+    let fitnessGoal: "bulk" | "recomp" | "moderate_cut" | "aggressive_cut" = "recomp";
+    if (topAlt === "Bulking") fitnessGoal = "bulk";
+    else if (topAlt === "Rekomposisi Tubuh") fitnessGoal = "recomp";
+    else if (topAlt === "Cutting Moderat") fitnessGoal = "moderate_cut";
+    else if (topAlt === "Cutting Agresif") fitnessGoal = "aggressive_cut";
+
+    const assessment: Assessment = {
+      ...tempAssessment,
+      fitnessGoal,
+      sawScores,
+    };
 
     // Simpan ke Supabase jika terkonfigurasi
     if (supabase) {
@@ -406,76 +405,7 @@ export default function AssessmentPage() {
             </div>
           </div>
 
-          {/* Fitness Goal Section */}
-          <div>
-            <h2 className="text-lg font-semibold text-foreground mb-4">
-              Tujuan Utama Kebugaran
-            </h2>
-            <RadioGroup
-              value={formData.fitnessGoal}
-              onValueChange={(value) =>
-                setFormData({
-                  ...formData,
-                  fitnessGoal: value as
-                    | "bulk"
-                    | "recomp"
-                    | "moderate_cut"
-                    | "aggressive_cut",
-                })
-              }
-            >
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2 p-3 rounded-lg hover:bg-background transition-colors cursor-pointer">
-                  <RadioGroupItem value="bulk" id="bulk" />
-                  <Label htmlFor="bulk" className="cursor-pointer flex-1">
-                    Membangun Otot (Bulking)
-                    <span className="block text-xs text-muted-foreground">
-                      Menaikkan berat badan untuk meningkatkan massa otot
-                    </span>
-                  </Label>
-                </div>
 
-                <div className="flex items-center space-x-2 p-3 rounded-lg hover:bg-background transition-colors cursor-pointer">
-                  <RadioGroupItem value="recomp" id="recomp" />
-                  <Label htmlFor="recomp" className="cursor-pointer flex-1">
-                    Memperbaiki Komposisi Tubuh (Recomp)
-                    <span className="block text-xs text-muted-foreground">
-                      Membangun otot sekaligus membakar lemak secara bersamaan
-                    </span>
-                  </Label>
-                </div>
-
-                <div className="flex items-center space-x-2 p-3 rounded-lg hover:bg-background transition-colors cursor-pointer">
-                  <RadioGroupItem value="moderate_cut" id="moderate_cut" />
-                  <Label
-                    htmlFor="moderate_cut"
-                    className="cursor-pointer flex-1"
-                  >
-                    Menurunkan Lemak (Moderat - Cutting)
-                    <span className="block text-xs text-muted-foreground">
-                      Menurunkan berat badan secara bertahap sambil mempertahankan otot
-                    </span>
-                  </Label>
-                </div>
-
-                <div className="flex items-center space-x-2 p-3 rounded-lg hover:bg-background transition-colors cursor-pointer">
-                  <RadioGroupItem value="aggressive_cut" id="aggressive_cut" />
-                  <Label
-                    htmlFor="aggressive_cut"
-                    className="cursor-pointer flex-1"
-                  >
-                    Menurunkan Lemak (Agresif - Cutting)
-                    <span className="block text-xs text-muted-foreground">
-                      Menurunkan lemak secara cepat (membutuhkan disiplin tinggi)
-                    </span>
-                  </Label>
-                </div>
-              </div>
-            </RadioGroup>
-            {errors.fitnessGoal && (
-              <p className="text-red-500 text-sm mt-3">{errors.fitnessGoal}</p>
-            )}
-          </div>
 
           {/* Submit Button */}
           <div className="flex gap-4 pt-4">

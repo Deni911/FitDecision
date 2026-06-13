@@ -101,6 +101,12 @@ export default function History() {
     });
 
   const handleDelete = async (id: string) => {
+    const password = prompt("Masukkan password admin untuk menghapus penilaian ini:");
+    if (password !== "admin") {
+      alert("Akses ditolak! Hanya admin yang memiliki hak untuk menghapus data.");
+      return;
+    }
+
     if (confirm("Apakah Anda yakin ingin menghapus penilaian ini?")) {
       if (supabase) {
         try {

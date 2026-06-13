@@ -37,7 +37,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     <div className="flex h-screen bg-background text-foreground">
       {/* Mobile menu button */}
       <div className="fixed top-0 left-0 z-40 md:hidden bg-card border-b border-border p-4 w-full flex items-center justify-between">
-        <div className="text-xl font-bold text-accent">FitDecision</div>
+        <div></div>
         <Button
           variant="ghost"
           size="icon"
