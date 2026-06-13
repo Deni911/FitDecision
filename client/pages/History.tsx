@@ -13,11 +13,22 @@ import {
 import { Assessment, getBMI } from "@/lib/saw-calculator";
 import { Search, Trash2, Eye } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 export default function History() {
   const [assessments, setAssessments] = useState<Assessment[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<"date" | "name">("date");
+  const [activeDeleteId, setActiveDeleteId] = useState<string | null>(null);
+  const [deletePassword, setDeletePassword] = useState("");
+  const [deleteError, setDeleteError] = useState("");
 
   useEffect(() => {
     const loadData = async () => {
@@ -100,20 +111,25 @@ export default function History() {
       return 0;
     });
 
-  const handleDelete = async (id: string) => {
-    const password = prompt("Masukkan password admin untuk menghapus penilaian ini:");
-    if (password !== "admin") {
-      alert("Akses ditolak! Hanya admin yang memiliki hak untuk menghapus data.");
+  const initiateDelete = (id: string) => {
+    setActiveDeleteId(id);
+    setDeletePassword("");
+    setDeleteError("");
+  };
+
+  const confirmDelete = async () => {
+    if (deletePassword !== "admin") {
+      setDeleteError("Akses ditolak! Password salah.");
       return;
     }
 
-    if (confirm("Apakah Anda yakin ingin menghapus penilaian ini?")) {
+    if (activeDeleteId) {
       if (supabase) {
         try {
           const { error } = await supabase
             .from("assessments")
             .delete()
-            .eq("id", id);
+            .eq("id", activeDeleteId);
           if (error) {
             console.error("Gagal menghapus dari Supabase:", error.message);
           }
@@ -122,9 +138,10 @@ export default function History() {
         }
       }
 
-      const updated = assessments.filter((a) => a.id !== id);
+      const updated = assessments.filter((a) => a.id !== activeDeleteId);
       setAssessments(updated);
       localStorage.setItem("assessments", JSON.stringify(updated));
+      setActiveDeleteId(null);
     }
   };
 
@@ -221,7 +238,7 @@ export default function History() {
                       <Button
                         size="sm"
                         variant="ghost"
-                        onClick={() => handleDelete(assessment.id)}
+                        onClick={() => initiateDelete(assessment.id)}
                         className="h-8 w-8 p-0 text-red-500 hover:text-red-600"
                         title="Hapus"
                       >
@@ -325,7 +342,7 @@ export default function History() {
                               <Button
                                 size="sm"
                                 variant="ghost"
-                                onClick={() => handleDelete(assessment.id)}
+                                onClick={() => initiateDelete(assessment.id)}
                                 title="Hapus penilaian"
                                 className="h-8 w-8 p-0 text-red-500 hover:text-red-600"
                               >
@@ -389,6 +406,57 @@ export default function History() {
           </div>
         </Card>
       )}
+
+      {/* Custom Delete Confirmation Dialog */}
+      <Dialog open={activeDeleteId !== null} onOpenChange={(open) => !open && setActiveDeleteId(null)}>
+        <DialogContent className="max-w-md bg-card border-border">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold text-foreground">Hapus Penilaian</DialogTitle>
+            <DialogDescription className="text-muted-foreground mt-2">
+              Tindakan ini memerlukan otorisasi admin dan tidak dapat dibatalkan. Silakan masukkan password untuk mengonfirmasi.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-1 py-1">
+            <div className="space-y-2">
+              <Input
+                type="password"
+                placeholder="Masukkan password..."
+                value={deletePassword}
+                onChange={(e) => {
+                  setDeletePassword(e.target.value);
+                  setDeleteError("");
+                }}
+                className={deleteError ? "border-red-500" : ""}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    confirmDelete();
+                  }
+                }}
+              />
+              {deleteError && (
+                <p className="text-red-500 text-xs font-medium mt-1">{deleteError}</p>
+              )}
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => setActiveDeleteId(null)}
+            >
+              Batal
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmDelete}
+              className="bg-red-500 hover:bg-red-600 text-white font-medium"
+            >
+              Hapus Penilaian
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
