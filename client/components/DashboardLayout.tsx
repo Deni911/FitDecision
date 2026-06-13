@@ -57,11 +57,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-screen w-64 bg-card border-r border-border transform transition-transform duration-200 z-40 md:relative md:transform-none pt-20 md:pt-0 overflow-y-auto ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        }`}
+        className={`fixed left-0 top-0 h-screen w-64 bg-card border-r border-border transform transition-transform duration-200 z-40 md:relative md:transform-none pt-20 md:pt-0 overflow-y-auto ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          }`}
       >
-        <div className="p-6 hidden md:block">
+        <div className="p-6">
           <h1 className="text-2xl font-bold text-accent">FitDecision</h1>
           <p className="text-xs text-muted-foreground mt-1">
             Sistem Pendukung Keputusan Kebugaran
